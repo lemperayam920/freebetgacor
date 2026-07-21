@@ -1,3 +1,4 @@
+
 <!--
 ██╗  ██╗███╗   ██╗ ██████╗
 ██║  ██║████╗  ██║██╔════╝
@@ -446,11 +447,11 @@
 <script>
   // ============ KONFIGURASI ============
   const prizes = [
-    { label: "Rp10.000",  value: 10000 },
-    { label: "Rp25.000",  value: 25000 },
     { label: "Rp50.000",  value: 50000 },
-    { label: "Rp100.000", value: 100000 },
-    { label: "Rp200.000", value: 200000 }
+    { label: "Rp100.000",  value: 100000 },
+    { label: "Rp150.000",  value: 150000 },
+    { label: "Rp200.000", value: 200000 },
+    { label: "Rp250.000", value: 250000 }
   ];
 
   // Ganti link ini ke tujuan klaim hadiah kamu (WhatsApp, form, dsb)
@@ -545,14 +546,29 @@
   if (hasAlreadySpun()) {
     lockSpinButton();
   }
+const weights = [10, 10, 10, 10, 60];
+//              10k 25k 50k 100k 200k
 
+function getWeightedWinner() {
+  const total = weights.reduce((a, b) => a + b, 0);
+  let rand = Math.random() * total;
+
+  for (let i = 0; i < weights.length; i++) {
+    if (rand < weights[i]) {
+      return i;
+    }
+    rand -= weights[i];
+  }
+
+  return 0;
+}
   function spinWheel(){
     if(spinning || hasAlreadySpun()) return;
     spinning = true;
     spinBtn.disabled = true;
     spinBtn.textContent = 'MEMUTAR...';
 
-    const winnerIndex = Math.floor(Math.random() * prizes.length);
+    const winnerIndex = getWeightedWinner();
     // titik tengah segmen pemenang harus berhenti tepat di pointer (atas, 0deg)
     const targetSegmentCenter = winnerIndex * segAngle + segAngle / 2;
     const extraSpins = 6 + Math.floor(Math.random() * 3); // 6-8 putaran penuh
